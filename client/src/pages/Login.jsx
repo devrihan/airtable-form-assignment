@@ -3,7 +3,7 @@ const API_URL = "";
 
 const Login = () => {
   const handleLogin = () => {
-    indow.location.href = "/api/auth/airtable";
+    window.location.href = "/api/auth/airtable";
   };
 
   return (
