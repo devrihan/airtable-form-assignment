@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { shouldShowQuestion } from "../utils/logicEngine";
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "";
 
 const Viewer = () => {
   const { id } = useParams();

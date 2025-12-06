@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "";
 
 const Responses = () => {
   const { id } = useParams();
