@@ -1,6 +1,4 @@
-/* client/src/index.css */
 
-/* GLOBAL RESET */
 * { box-sizing: border-box; }
 
 body {
@@ -10,18 +8,15 @@ body {
   color: #1f2937;
 }
 
-/* --- CRITICAL FIX FOR REACT CENTERING --- */
 #root {
   min-height: 100vh;
   display: flex;
-  justify-content: center; /* Horizontally Center */
-  align-items: center;     /* Vertically Center */
+  justify-content: center;
+  align-items: center;     
   width: 100%;
 }
 
-/* ... (Keep the rest of the CSS I gave you below) ... */
 
-/* --- SHARED COMPONENTS --- */
 button { cursor: pointer; transition: all 0.2s; }
 
 .btn-primary {
@@ -52,10 +47,9 @@ input:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* --- VIEWER PAGE STYLES --- */
 .viewer-container {
   width: 100%;
-  max-width: 550px; /* Limits width so it looks like a card */
+  max-width: 550px;
   background: white;
   padding: 40px;
   border-radius: 12px;
@@ -66,7 +60,6 @@ input:focus, select:focus {
 .field-group { margin-bottom: 25px; }
 .field-label { font-weight: 600; color: #374151; display: block; margin-bottom: 6px; }
 
-/* File Upload Box Styling */
 .file-drop-zone {
   border: 2px dashed #cbd5e1;
   padding: 25px;
@@ -82,7 +75,6 @@ input:focus, select:focus {
 .status-success { color: #059669; }
 .status-loading { color: #2563eb; }
 
-/* --- BUILDER PAGE STYLES --- */
 .builder-layout {
   display: flex;
   gap: 20px;

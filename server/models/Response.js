@@ -5,7 +5,7 @@ const ResponseSchema = new mongoose.Schema(
     formId: { type: mongoose.Schema.Types.ObjectId, ref: "Form" },
     airtableRecordId: String,
     answers: Object,
-    status: { type: String, default: "active" }, // 'active' or 'deletedInAirtable'
+    status: { type: String, default: "active" },
   },
   { timestamps: true }
 );

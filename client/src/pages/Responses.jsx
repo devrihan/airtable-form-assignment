@@ -3,11 +3,11 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const Responses = () => {
-  const { id } = useParams(); // Form ID
+  const { id } = useParams();
   const [responses, setResponses] = useState([]);
 
   useEffect(() => {
-    // Requires the backend route created in Step 5
+
     axios.get(`http://localhost:5000/api/forms/${id}/responses`)
       .then((res) => setResponses(res.data))
       .catch((err) => console.error(err));

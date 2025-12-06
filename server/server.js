@@ -19,10 +19,8 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
-// Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/forms", require("./routes/forms"));
-// inside server.js
 const webhooksRoute = require("./routes/webhooks");
 app.use("/api/webhooks", webhooksRoute);
 

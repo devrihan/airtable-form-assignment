@@ -1,169 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
-
-// const Builder = () => {
-//   const [bases, setBases] = useState([]);
-//   const [tables, setTables] = useState([]);
-//   const [selectedBase, setSelectedBase] = useState('');
-//   const [selectedTable, setSelectedTable] = useState('');
-//   const [availableFields, setAvailableFields] = useState([]);
-//   const [formFields, setFormFields] = useState([]);
-//   const navigate = useNavigate();
-
-//   const api = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true });
-
-//   useEffect(() => {
-//     api.get('/forms/bases').then(res => setBases(res.data));
-//   }, []);
-
-//   const handleBaseChange = async (e) => {
-//     const baseId = e.target.value;
-//     setSelectedBase(baseId);
-//     const res = await api.get(`/forms/bases/${baseId}/tables`);
-//     setTables(res.data);
-//   };
-
-//   const handleTableChange = (e) => {
-//     const tableId = e.target.value;
-//     setSelectedTable(tableId);
-//     const table = tables.find(t => t.id === tableId);
-//     setAvailableFields(table.fields);
-//   };
-
-//   const addFieldToForm = (field) => {
-//     let extractedOptions = [];
-//     // Safely extract choices if they exist (for Select fields)
-//     if (field.options && field.options.choices) {
-//       extractedOptions = field.options.choices.map(c => c.name);
-//     }
-
-//     setFormFields([...formFields, {
-//       questionKey: field.id,
-//       airtableFieldId: field.id,
-//       label: field.name, // Default label is field name
-//       type: field.type,
-//       required: false,   // Default to optional
-//       options: extractedOptions,
-//       conditionalRules: { logic: 'AND', conditions: [] }
-//     }]);
-//   };
-
-//   // --- NEW: Update Label & Required Status ---
-//   const updateFieldProperty = (index, key, value) => {
-//     const updated = [...formFields];
-//     updated[index][key] = value;
-//     setFormFields(updated);
-//   };
-
-//   // --- Logic Handling ---
-//   const addCondition = (index) => {
-//     const updated = [...formFields];
-//     updated[index].conditionalRules.conditions.push({ questionKey: '', operator: 'equals', value: '' });
-//     setFormFields(updated);
-//   };
-
-//   const updateCondition = (fieldIndex, condIndex, key, val) => {
-//     const updated = [...formFields];
-//     updated[fieldIndex].conditionalRules.conditions[condIndex][key] = val;
-//     setFormFields(updated);
-//   };
-
-//   const saveForm = async () => {
-//     try {
-//       const res = await api.post('/forms', {
-//         baseId: selectedBase,
-//         tableId: selectedTable,
-//         title: "Job Application Form",
-//         fields: formFields
-//       });
-//       alert("Form Saved!");
-//       navigate(`/viewer/${res.data._id}`); // Go to Viewer
-//     } catch(e) {
-//       alert("Error saving form: " + e.message);
-//     }
-//   };
-
-//   return (
-//     <div style={{ padding: 20, display: 'flex', gap: 20 }}>
-//       {/* LEFT SIDE: SELECTOR */}
-//       <div style={{ width: '30%' }}>
-//         <h3>1. Select Source</h3>
-//         <select onChange={handleBaseChange} style={{width:'100%', marginBottom:10}}>
-//           <option>Select Base</option>
-//           {bases.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-//         </select>
-//         <select onChange={handleTableChange} disabled={!selectedBase} style={{width:'100%', marginBottom:20}}>
-//           <option>Select Table</option>
-//           {tables.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-//         </select>
-
-//         <h4>Available Fields</h4>
-//         {availableFields.map(f => (
-//           <div key={f.id} style={{ marginBottom: 5, padding:5, border:'1px solid #ddd' }}>
-//             {f.name} <small>({f.type})</small>
-//             <button onClick={() => addFieldToForm(f)} style={{float:'right'}}>Add</button>
-//           </div>
-//         ))}
-//       </div>
-
-//       {/* RIGHT SIDE: FORM EDITOR */}
-//       <div style={{ width: '70%' }}>
-//         <h3>2. Customize Form</h3>
-//         {formFields.map((f, i) => (
-//           <div key={i} style={{ border: '1px solid #ccc', padding: 15, marginBottom: 15, borderRadius: 5 }}>
-            
-//             {/* RENAME LABEL & TOGGLE REQUIRED */}
-//             <div style={{display:'flex', gap:10, marginBottom: 10}}>
-//               <div style={{flex: 1}}>
-//                 <label>Label:</label>
-//                 <input 
-//                   value={f.label} 
-//                   onChange={(e) => updateFieldProperty(i, 'label', e.target.value)}
-//                   style={{width:'100%', fontWeight:'bold'}}
-//                 />
-//               </div>
-//               <div>
-//                 <label>
-//                   <input 
-//                     type="checkbox" 
-//                     checked={f.required} 
-//                     onChange={(e) => updateFieldProperty(i, 'required', e.target.checked)} 
-//                   /> Required?
-//                 </label>
-//               </div>
-//             </div>
-
-//             {/* LOGIC SECTION */}
-//             <div style={{background:'#f5f5f5', padding:10, marginTop:10}}>
-//               <small>Show this field if...</small>
-//               {f.conditionalRules.conditions.map((c, ci) => (
-//                 <div key={ci} style={{display:'flex', gap:5, marginTop:5}}>
-//                   <select onChange={(e) => updateCondition(i, ci, 'questionKey', e.target.value)}>
-//                     <option value="">Select Field...</option>
-//                     {formFields.map(prev => <option key={prev.questionKey} value={prev.questionKey}>{prev.label}</option>)}
-//                   </select>
-//                   <select onChange={(e) => updateCondition(i, ci, 'operator', e.target.value)}>
-//                     <option value="equals">Equals</option>
-//                     <option value="notEquals">Not Equals</option>
-//                     <option value="contains">Contains</option>
-//                   </select>
-//                   <input placeholder="Value" onChange={(e) => updateCondition(i, ci, 'value', e.target.value)} />
-//                 </div>
-//               ))}
-//               <button onClick={() => addCondition(i)} style={{marginTop:5, fontSize:'0.8em'}}>+ Add Condition</button>
-//             </div>
-
-//           </div>
-//         ))}
-//         {formFields.length > 0 && <button onClick={saveForm} style={{padding:15, fontSize:16, background:'black', color:'white'}}>Save Form</button>}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Builder;
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -245,7 +79,7 @@ const Builder = () => {
 
   return (
     <div className="builder-layout">
-      {/* LEFT SIDEBAR */}
+
       <div className="builder-sidebar">
         <h2 style={{marginTop:0}}>Form Builder</h2>
         
@@ -274,7 +108,7 @@ const Builder = () => {
         )}
       </div>
 
-      {/* RIGHT CANVAS */}
+
       <div className="builder-canvas">
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 20}}>
           <h2 style={{margin:0}}>Form Preview</h2>
@@ -315,7 +149,7 @@ const Builder = () => {
               </div>
             </div>
 
-            {/* LOGIC SECTION */}
+
             <div className="logic-section">
               <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                 <strong style={{fontSize:13}}>Conditional Logic</strong>

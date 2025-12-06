@@ -1,15 +1,13 @@
 const express = require("express");
 const axios = require("axios");
-const crypto = require("crypto"); // Built-in Node module
+const crypto = require("crypto");
 const User = require("../models/User");
 const router = express.Router();
 
-// Helper to generate random string
 const generateRandomString = (length) => {
   return crypto.randomBytes(length).toString("hex");
 };
 
-// Helper for PKCE Code Challenge
 const generateCodeChallenge = (verifier) => {
   return crypto
     .createHash("sha256")
@@ -20,11 +18,8 @@ const generateCodeChallenge = (verifier) => {
     .replace(/=+$/, "");
 };
 
-// Store verifiers temporarily (In memory for simplicity)
-// In production, use Redis or a database with a short expiration
 const pendingVerifiers = new Map();
 
-// 1. Redirect to Airtable with PKCE
 router.get("/airtable", (req, res) => {
   const scope =
     "data.records:read data.records:write schema.bases:read webhook:manage";
@@ -32,7 +27,6 @@ router.get("/airtable", (req, res) => {
   const codeVerifier = generateRandomString(32);
   const codeChallenge = generateCodeChallenge(codeVerifier);
 
-  // Save verifier mapped to state so we can retrieve it in callback
   pendingVerifiers.set(state, codeVerifier);
 
   const params = new URLSearchParams({
@@ -50,7 +44,6 @@ router.get("/airtable", (req, res) => {
   res.redirect(url);
 });
 
-// 2. Callback from Airtable
 router.get("/callback", async (req, res) => {
   const { code, state, error, error_description } = req.query;
 
@@ -59,14 +52,13 @@ router.get("/callback", async (req, res) => {
     return res.status(400).send(`Login Failed: ${error_description}`);
   }
 
-  // Retrieve the code_verifier using the state
   const codeVerifier = pendingVerifiers.get(state);
   if (!codeVerifier) {
     return res
       .status(400)
       .send("Invalid state or session expired. Please try again.");
   }
-  pendingVerifiers.delete(state); // Clean up
+  pendingVerifiers.delete(state);
 
   const encodedCreds = Buffer.from(
     `${process.env.AIRTABLE_CLIENT_ID}:${process.env.AIRTABLE_CLIENT_SECRET}`
@@ -79,7 +71,7 @@ router.get("/callback", async (req, res) => {
         code,
         grant_type: "authorization_code",
         redirect_uri: process.env.REDIRECT_URI,
-        code_verifier: codeVerifier, // PKCE Requirement
+        code_verifier: codeVerifier,
       }),
       {
         headers: {
