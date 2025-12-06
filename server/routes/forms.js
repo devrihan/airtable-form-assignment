@@ -122,10 +122,8 @@ router.post("/", requireAuth, async (req, res) => {
   }
 });
 
-// GET all forms for the current user
 router.get("/", requireAuth, async (req, res) => {
   try {
-    // Find forms where userId matches the logged-in user, sorted by newest first
     const forms = await Form.find({ userId: req.user._id }).sort({
       createdAt: -1,
     });
