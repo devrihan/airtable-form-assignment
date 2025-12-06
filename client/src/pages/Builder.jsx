@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Builder = () => {
   const [bases, setBases] = useState([]);
@@ -11,7 +12,7 @@ const Builder = () => {
   const [formFields, setFormFields] = useState([]);
   const navigate = useNavigate();
 
-  const api = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true });
+  const api = axios.create({ baseURL: `${API_URL}/api`, withCredentials: true });
 
   useEffect(() => {
     api.get('/forms/bases').then(res => setBases(res.data));

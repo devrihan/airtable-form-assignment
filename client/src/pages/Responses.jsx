@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Responses = () => {
   const { id } = useParams();
@@ -8,7 +9,7 @@ const Responses = () => {
 
   useEffect(() => {
 
-    axios.get(`http://localhost:5000/api/forms/${id}/responses`)
+    axios.get(`${API_URL}/api/forms/${id}/responses`)
       .then((res) => setResponses(res.data))
       .catch((err) => console.error(err));
   }, [id]);

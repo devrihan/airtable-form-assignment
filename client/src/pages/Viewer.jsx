@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { shouldShowQuestion } from "../utils/logicEngine";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Viewer = () => {
   const { id } = useParams();
@@ -18,7 +19,7 @@ const Viewer = () => {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/forms/${id}`)
+    axios.get(`${API_URL}/api/forms/${id}`)
       .then((res) => setForm(res.data))
       .catch((err) => console.error(err));
   }, [id]);
@@ -65,7 +66,7 @@ const Viewer = () => {
       return;
     }
     try {
-      await axios.post(`http://localhost:5000/api/forms/${id}/submit`, { answers });
+      axios.post(`${API_URL}/api/forms/${id}/submit`, { answers });
       setSubmitted(true);
     } catch (err) {
       alert("Submission Failed");
