@@ -10,11 +10,10 @@ app.set("trust proxy", true);
 
 app.use((req, res, next) => {
   if (req.path.includes("/auth/callback")) {
-    console.log("--- DEBUG SESSION ---");
+    // I (Rihan) added this logging to debug issues with secure cookies behind a proxy
     console.log("Protocol:", req.protocol);
     console.log("Secure:", req.secure);
     console.log("X-Forwarded-Proto:", req.headers["x-forwarded-proto"]);
-    console.log("---------------------");
   }
   next();
 });
