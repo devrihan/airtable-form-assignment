@@ -99,7 +99,8 @@ router.get("/callback", async (req, res) => {
     );
 
     req.session.userId = user._id;
-    res.redirect(`${process.env.CLIENT_URL}/builder`);
+    // res.redirect(`${process.env.CLIENT_URL}/builder`);
+    res.redirect(`${process.env.CLIENT_URL}/dashboard`);
   } catch (err) {
     console.error("Token Exchange Error:", err.response?.data || err.message);
     res.status(500).send("Login Failed during Token Exchange");
