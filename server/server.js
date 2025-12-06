@@ -36,7 +36,18 @@ require("dotenv").config();
 const app = express();
 
 // 1. TRUST PROXY (REQUIRED for Render to allow secure cookies)
-app.set("trust proxy", 1);
+app.set("trust proxy", true);
+
+app.use((req, res, next) => {
+  if (req.path.includes("/auth/callback")) {
+    console.log("--- DEBUG SESSION ---");
+    console.log("Protocol:", req.protocol);
+    console.log("Secure:", req.secure);
+    console.log("X-Forwarded-Proto:", req.headers["x-forwarded-proto"]);
+    console.log("---------------------");
+  }
+  next();
+});
 
 // 2. Update CORS to ensure it accepts your specific frontend
 app.use(
