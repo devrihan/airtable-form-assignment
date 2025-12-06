@@ -1,48 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import { useParams } from "react-router-dom";
-// const API_URL = "";
-
-// const Responses = () => {
-//   const { id } = useParams();
-//   const [responses, setResponses] = useState([]);
-
-//   useEffect(() => {
-
-//     axios.get(`${API_URL}/api/forms/${id}/responses`)
-//       .then((res) => setResponses(res.data))
-//       .catch((err) => console.error(err));
-//   }, [id]);
-
-//   return (
-//     <div style={{ padding: 20 }}>
-//       <h2>Form Responses</h2>
-//       <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
-//         <thead>
-//           <tr>
-//             <th>Submitted At</th>
-//             <th>Airtable Record ID</th>
-//             <th>Answers (JSON)</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {responses.map((r) => (
-//             <tr key={r._id}>
-//               <td>{new Date(r.createdAt).toLocaleString()}</td>
-//               <td>{r.airtableRecordId}</td>
-//               <td>
-//                 <pre style={{fontSize:10}}>{JSON.stringify(r.answers, null, 2)}</pre>
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-// export default Responses;
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
@@ -53,13 +8,11 @@ const Responses = () => {
   const [form, setForm] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Relative URL for Vercel Proxy
   const API_URL = ""; 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch both the Form (for labels) and the Responses (for data)
         const [formRes, responsesRes] = await Promise.all([
           axios.get(`${API_URL}/api/forms/${id}`),
           axios.get(`${API_URL}/api/forms/${id}/responses`)
@@ -77,18 +30,15 @@ const Responses = () => {
     fetchData();
   }, [id]);
 
-  // --- EXPORT TO CSV FUNCTION ---
   const downloadCSV = () => {
     if (!form || responses.length === 0) return alert("No data to export");
 
-    // 1. Create Headers (Questions)
     const headers = [
       "Submitted At",
       "Airtable Record ID",
-      ...form.fields.map(f => `"${f.label.replace(/"/g, '""')}"`) // Escape quotes
+      ...form.fields.map(f => `"${f.label.replace(/"/g, '""')}"`) 
     ];
 
-    // 2. Create Rows (Answers)
     const rows = responses.map(r => {
       const rowData = [
         `"${new Date(r.createdAt).toLocaleString()}"`,
@@ -96,12 +46,10 @@ const Responses = () => {
         ...form.fields.map(f => {
           let val = r.answers[f.questionKey];
           
-          // Handle File Uploads & Arrays (e.g. Multiple Select)
           if (Array.isArray(val)) {
             val = val.map(item => (item && item.url) ? item.url : item).join(", ");
           }
           
-          // Handle Text (Escape quotes for CSV)
           if (!val) return '""';
           return `"${String(val).replace(/"/g, '""')}"`;
         })
@@ -109,7 +57,6 @@ const Responses = () => {
       return rowData.join(",");
     });
 
-    // 3. Combine & Download
     const csvContent = [headers.join(","), ...rows].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -121,7 +68,6 @@ const Responses = () => {
     document.body.removeChild(link);
   };
 
-  // --- EXPORT TO JSON FUNCTION ---
   const downloadJSON = () => {
     if (!responses.length) return alert("No data to export");
     
@@ -141,14 +87,12 @@ const Responses = () => {
 
   return (
     <div style={{ maxWidth: 1000, margin: '40px auto', padding: 20 }}>
-      {/* HEADER */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <div>
           <Link to="/dashboard" style={{ textDecoration: 'none', color: '#666' }}>← Back to Dashboard</Link>
           <h1 style={{ marginTop: 10 }}>{form.title} - Responses</h1>
         </div>
         
-        {/* EXPORT BUTTONS */}
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={downloadCSV} style={{ padding: '10px 15px', background: '#10b981', color: 'white', border: 'none', borderRadius: 6, fontWeight: 'bold' }}>
             Download CSV
@@ -159,7 +103,6 @@ const Responses = () => {
         </div>
       </div>
 
-      {/* DATA TABLE */}
       <div style={{ overflowX: 'auto', background: 'white', borderRadius: 8, boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
           <thead style={{ background: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
@@ -190,7 +133,6 @@ const Responses = () => {
                     const answer = r.answers[f.questionKey];
                     return (
                       <td key={f.questionKey} style={{ padding: 15, fontSize: 14 }}>
-                        {/* Render Arrays/Files nicely */}
                         {Array.isArray(answer) ? (
                           answer.map((item, i) => (
                             <div key={i}>
@@ -202,7 +144,6 @@ const Responses = () => {
                             </div>
                           ))
                         ) : (
-                          // Render simple text
                           String(answer || "-")
                         )}
                       </td>

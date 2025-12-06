@@ -11,7 +11,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        {/* ADD THIS NEW ROUTE */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/builder" element={<Builder />} />
         

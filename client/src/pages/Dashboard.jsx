@@ -6,7 +6,6 @@ const Dashboard = () => {
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Use relative URL so Vercel proxy handles it
   const API_URL = ""; 
 
   useEffect(() => {
@@ -26,7 +25,6 @@ const Dashboard = () => {
   return (
     <div style={{ maxWidth: 800, margin: '40px auto', padding: 20 }}>
       
-      {/* HEADER SECTION */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }}>
         <h1 style={{ margin: 0 }}>My Forms</h1>
         <Link to="/builder">
@@ -36,7 +34,6 @@ const Dashboard = () => {
         </Link>
       </div>
 
-      {/* FORMS LIST */}
       {forms.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 50, background: 'white', borderRadius: 12, boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
           <h3>No forms yet!</h3>
@@ -65,7 +62,6 @@ const Dashboard = () => {
               </div>
 
               <div style={{ display: 'flex', gap: 10 }}>
-                {/* View Live Form */}
                 <Link to={`/viewer/${form._id}`} target="_blank">
                   <button style={{ 
                     padding: '8px 12px', 
@@ -78,7 +74,6 @@ const Dashboard = () => {
                   </button>
                 </Link>
 
-                {/* View Responses */}
                 <Link to={`/responses/${form._id}`}>
                   <button style={{ 
                     padding: '8px 12px', 
