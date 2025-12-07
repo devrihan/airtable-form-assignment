@@ -2,7 +2,7 @@
 
 A full-stack application that allows users to build custom forms connected directly to their Airtable bases. Features include drag-and-drop field selection, conditional logic, file uploads, and real-time response syncing.
 
-[![Demo Video](https://img.shields.io/badge/Watch%20Demo-Video-red?style=for-the-badge)]([YOUR_GOOGLE_DRIVE_LINK](https://drive.google.com/file/d/1vmDt0ZglpNSVUggQmiQAgH0YmgoEEHX6/view?usp=sharing))
+[![Demo Video](https://img.shields.io/badge/Watch%20Demo-Video-red?style=for-the-badge)](https://drive.google.com/file/d/1vmDt0ZglpNSVUggQmiQAgH0YmgoEEHX6/view?usp=sharing)
 
 ##  Features
 - **Airtable Integration**: OAuth2 authentication and automatic fetching of Bases and Tables.
