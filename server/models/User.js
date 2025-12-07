@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   airtableId: String,
   email: String,
-  accessToken: String,
-  refreshToken: String,
+  accessToken: String, //
+  refreshToken: String, //
   tokenExpiresAt: Date,
 });
 

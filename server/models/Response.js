@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+//links a formId to an airtableRecordId
 
 const ResponseSchema = new mongoose.Schema(
   {

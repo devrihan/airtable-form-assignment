@@ -20,6 +20,8 @@ const generateCodeChallenge = (verifier) => {
 
 const pendingVerifiers = new Map();
 
+//Proof Key for Code Exchange (PKCE)
+
 router.get("/airtable", (req, res) => {
   const scope =
     "data.records:read data.records:write schema.bases:read webhook:manage";
