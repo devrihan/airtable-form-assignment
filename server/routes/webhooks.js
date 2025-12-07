@@ -15,7 +15,7 @@ router.post("/airtable", async (req, res) => {
   const webhookId = body.webhook.id;
   const baseId = body.base.id;
 
-  console.log(`🔔 Webhook Notification for Hook ID: ${webhookId}`);
+  console.log(` Webhook Notification for Hook ID: ${webhookId}`);
 
   try {
     const form = await Form.findOne({ webhookId }).populate("userId");
@@ -44,7 +44,7 @@ router.post("/airtable", async (req, res) => {
       if (payload.destroyedRecordIds) {
         for (const recordId of payload.destroyedRecordIds) {
           await Response.findOneAndDelete({ airtableRecordId: recordId });
-          console.log(`🗑️ Deleted local response: ${recordId}`);
+          console.log(` Deleted local response: ${recordId}`);
         }
       }
 
@@ -96,7 +96,7 @@ router.post("/airtable", async (req, res) => {
       }
     }
   } catch (error) {
-    console.error("❌ Webhook Error:", error.response?.data || error.message);
+    console.error(" Webhook Error:", error.response?.data || error.message);
   }
 
   res.sendStatus(200);
